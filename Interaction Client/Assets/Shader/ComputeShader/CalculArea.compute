@@ -1,0 +1,30 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+#define col 1433
+// inputData
+RWTexture2D<float4> TargetTex;
+RWTexture2D<float4> ObjectTex;
+RWStructuredBuffer<int> inputData;
+
+// outputData
+struct Data {
+    int Area;
+    int CoveredArea;
+};
+
+RWStructuredBuffer<Data> outputData;
+
+[numthreads(2,2,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x + inputData[0] * id.y;
+    if ((TargetTex[id.xy].x != 0.0f || TargetTex[id.xy].y != 0.0f || TargetTex[id.xy].z != 0.0f) && (ObjectTex[id.xy].x == 0.0f && ObjectTex[id.xy].y == 0.0f && ObjectTex[id.xy].z == 0.0f))
+        outputData[index].Area = 1;
+    else
+        outputData[index].Area = 0;
+
+    if ((TargetTex[id.xy].x != 0.0f || TargetTex[id.xy].y != 0.0f || TargetTex[id.xy].z != 0.0f) && (ObjectTex[id.xy].x != 0.0f || ObjectTex[id.xy].y != 0.0f || ObjectTex[id.xy].z != 0.0f))
+        outputData[index].CoveredArea = 1;
+    else
+        outputData[index].CoveredArea = 0;
+}
