@@ -44,6 +44,16 @@ public class OppositeRay : MonoBehaviour
         init_pos = _init_pos;
     }
 
+    public Vector3 GetInitPos()
+    {
+        return init_pos;
+    }
+
+    public Vector3 GetEndPos()
+    {
+        return end_pos;
+    }
+
     public void SetEndPos(Vector3 _end_pos)
     {
         end_pos = _end_pos;

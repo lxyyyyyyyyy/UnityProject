@@ -10,7 +10,7 @@ public class CameraMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Speed = 0.1f;
+        Speed = 0.3f;
         // inputKeys = new KeyCode[] { KeyCode.W, KeyCode.A, KeyCode.D, KeyCode.S, KeyCode.Q, KeyCode.E };
         inputKeys = new KeyCode[] { KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N };
         directionForkeys = new Vector3[] { Vector3.forward, Vector3.left, Vector3.right, Vector3.back, Vector3.up, Vector3.down };

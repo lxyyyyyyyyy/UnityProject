@@ -58,6 +58,7 @@
      <Compile Include="Assets\OBJExport\OBJExporter.cs" />
      <Compile Include="Assets\Scripts\Button\ButtonControl.cs" />
      <Compile Include="Assets\Scripts\Button\CalculateError.cs" />
+     <Compile Include="Assets\Scripts\Button\NextDomChangeFrame.cs" />
      <Compile Include="Assets\Scripts\Button\StorePath.cs" />
      <Compile Include="Assets\Scripts\Camera\ClientCamera.cs" />
      <Compile Include="Assets\Scripts\Camera\LargerFovCamera.cs" />
@@ -71,14 +72,15 @@
      <Compile Include="Assets\Scripts\Control\Animation\FileIO.cs" />
      <Compile Include="Assets\Scripts\Control\Animation\TrajectoryStore.cs" />
      <Compile Include="Assets\Scripts\Control\CameraMove.cs" />
+     <Compile Include="Assets\Scripts\Control\DominatorMark.cs" />
      <Compile Include="Assets\Scripts\Control\Move.cs" />
-     <Compile Include="Assets\Scripts\depth.cs" />
-     <Compile Include="Assets\Scripts\GetGameObject.cs" />
      <Compile Include="Assets\Scripts\NetWork\NetWorkAsServer.cs" />
+     <Compile Include="Assets\Scripts\Others\depth.cs" />
+     <Compile Include="Assets\Scripts\Others\GetGameObject.cs" />
+     <Compile Include="Assets\Scripts\Others\TestC.cs" />
      <Compile Include="Assets\Scripts\Ray\DrawLine.cs" />
      <Compile Include="Assets\Scripts\Ray\MyRay.cs" />
      <Compile Include="Assets\Scripts\Ray\OppositeRay.cs" />
-     <Compile Include="Assets\Scripts\TestC.cs" />
      <Compile Include="Assets\Scripts\View\RenderFrame.cs" />
      <Compile Include="Assets\Scripts\View\showScore_client.cs" />
      <Compile Include="Assets\Scripts\View\showScore_server.cs" />

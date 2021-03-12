@@ -52,7 +52,7 @@ public class CalculateCompleteArea : MonoBehaviour
             overArea += outputData[i].CoveredArea;
         }
         overArea *= 3;
-        Debug.LogFormat("over area: {0}", overArea);
+        // Debug.LogFormat("over area: {0}", overArea);
 
         // 要创建的线程组的数量
         shader.Dispatch(kernelHandle, Screen.width / 2, Screen.height / 2, 1);

@@ -6,25 +6,24 @@ using System.Text;
 
 public class FileIO : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Awake()
-    {
-        
-    }
-
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
+    public void Writef(string data, bool append = false, string Path = "./Assets/Scripts/Control/Resource/TargetInfo.csv")
+    {
+        List<string> dataList = new List<string>();
+        dataList.Add(data);
+        Writef(dataList, append, Path);
+    }
 
-    public void Writef(List<string> data, string Path = "./Assets/Scripts/Control/Resource/TargetInfo.csv")
+    public void Writef(List<string> data, bool append = false, string Path = "./Assets/Scripts/Control/Resource/TargetInfo.csv")
     {
         FileInfo fi = new FileInfo(Path);
         if (!fi.Exists)
@@ -32,7 +31,7 @@ public class FileIO : MonoBehaviour
             fi.Create().Dispose();
         }
 
-        StreamWriter sw = new StreamWriter(Path, false, Encoding.UTF8);
+        StreamWriter sw = new StreamWriter(Path, append, Encoding.UTF8);
         foreach (string t in data)
         {
             sw.WriteLine(t);

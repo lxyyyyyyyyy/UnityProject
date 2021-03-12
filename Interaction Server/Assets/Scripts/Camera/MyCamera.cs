@@ -19,7 +19,7 @@ public class MyCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Debug.LogFormat("???{0}, {1}, {2}", transform.position.x, transform.position.y, transform.position.z);
+       
         if (transform.position != origin_position || transform.rotation != origin_rotation)
         {
             origin_position = transform.position;

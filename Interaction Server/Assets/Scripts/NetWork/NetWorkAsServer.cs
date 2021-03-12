@@ -22,6 +22,7 @@ public class NetWorkAsServer : MonoBehaviour
     private OppositeRay oppositeRayScript;
     private ClientCamera clientCameraScript;
     private ViewQuality viewQualityScript;
+    private ButtonControl butControlScript;
 
     void Awake()
     {
@@ -29,12 +30,14 @@ public class NetWorkAsServer : MonoBehaviour
         port = 10001;
         serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         clientList = new List<Socket>();
+
         targetMoveScript = GameObject.Find("Relief").GetComponent<Move>();
         myRayScript = GameObject.Find("Main Camera").GetComponent<MyRay>();
         myCameraScript = GameObject.Find("Main Camera").GetComponent<MyCamera>();
         oppositeRayScript = GameObject.Find("Relief/Line2").GetComponent<OppositeRay>();
         clientCameraScript = GameObject.Find("ClientCamera").GetComponent<ClientCamera>();
         viewQualityScript = GameObject.Find("Main Camera").GetComponent<ViewQuality>();
+        butControlScript = GameObject.Find("Canvas/Button1").GetComponent<ButtonControl>();
     }
 
     void Start()
@@ -93,8 +96,8 @@ public class NetWorkAsServer : MonoBehaviour
             {
                 Debug.Log (ex.Message);
                 // myClientSocket.Shutdown(SocketShutdown.Both); // 禁止发送和上传
-                myClientSocket.Close(); // 关闭Socket并释放资源
-                break;
+                // myClientSocket.Close(); // 关闭Socket并释放资源
+                // break;
             }
         }
     }
@@ -151,7 +154,9 @@ public class NetWorkAsServer : MonoBehaviour
         }
     }
 
-    void DealChangeDominator() => targetMoveScript.dominator ^= true;
+    void DealChangeDominator() {
+        targetMoveScript.dominator = false;
+    } 
 
     void DealOppositeDetectTarget()
     {

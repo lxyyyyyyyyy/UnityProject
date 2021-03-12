@@ -22,7 +22,7 @@ public class Move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dominator = true;
+        dominator = false;
         Speed = 0.3f;
         rotateSpeed = 0.3f;
 

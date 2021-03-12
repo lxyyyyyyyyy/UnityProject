@@ -32,7 +32,13 @@ public class ButtonControl : MonoBehaviour
 
     void ChangeDominator()
     {
-        GameObject.Find("Relief").GetComponent<Move>().dominator ^= true;
+        if (GameObject.Find("Relief").GetComponent<Move>().dominator)
+        {
+            Debug.Log("You are already the Dominator");
+            return;
+        }
+        GameObject.Find("Relief").GetComponent<Move>().dominator = true;
         GameObject.Find("Relief").GetComponent<NetWorkAsClient>().SendMessageToServer("Dominator");
+        // GameObject.Find("ClientCamera").SetActive(false);
     }
 }

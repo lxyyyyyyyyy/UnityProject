@@ -7,7 +7,7 @@ public class AutoMove : MonoBehaviour
 {
     private FileIO fileIoScript;
     private List<string> trajectory;
-    int index = 0, Speed = 1, count = 0;
+    private int index = 0, Speed = 1, count = 0;
 
     private Move moveScript;
     private NetWorkAsServer networkScript;

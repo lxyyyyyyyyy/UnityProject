@@ -20,8 +20,8 @@ public class MyRay : MonoBehaviour
         
         init_pos = gameObject.transform.position + new Vector3(0, -0.1f, 0);
         direction = GameObject.Find("Relief").transform.position - init_pos;
-        Debug.Log(direction);
         end_pos = init_pos + 5 * direction;
+
         origin_init_pos = new Vector3(0, 0, 0);
         origin_end_pos = new Vector3(0, 0, 0);
         line_color = Color.red;

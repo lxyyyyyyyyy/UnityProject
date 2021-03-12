@@ -67,6 +67,7 @@
      <Compile Include="Assets\Scripts\CommandBuffer\TargetToRt.cs" />
      <Compile Include="Assets\Scripts\Control\AutoMove.cs" />
      <Compile Include="Assets\Scripts\Control\CameraMove.cs" />
+     <Compile Include="Assets\Scripts\Control\DominatorMark.cs" />
      <Compile Include="Assets\Scripts\Control\Move.cs" />
      <Compile Include="Assets\Scripts\NetWork\NetWorkAsClient.cs" />
      <Compile Include="Assets\Scripts\Ray\DrawLine.cs" />

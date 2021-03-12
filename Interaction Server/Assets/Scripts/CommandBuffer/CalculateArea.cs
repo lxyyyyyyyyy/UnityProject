@@ -50,7 +50,7 @@ public class CalculateArea : MonoBehaviour
         {
             area += outputData[i].Area; coveredArea += outputData[i].CoveredArea;
         }
-        Debug.LogFormat("Area: {0}, Covered Area: {1}", area, coveredArea);
+        // Debug.LogFormat("Area: {0}, Covered Area: {1}", area, coveredArea);
 
         // 要创建的线程组的数量
         shader.Dispatch(kernelHandle, Screen.width / 2, Screen.height / 2, 1);        
