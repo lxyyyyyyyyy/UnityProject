@@ -1,0 +1,38 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+// inputData
+RWTexture2D<float4> AllDepthTex;
+RWTexture2D<float4> SingleTarDepthTex;
+RWTexture2D<float4> SingleObjDepthTex;
+RWStructuredBuffer<int> inputData;
+
+// outputData
+struct Data {
+    int TarArea;
+    int ObjArea;
+    int CoveredArea;
+};
+
+RWStructuredBuffer<Data> outputData;
+
+[numthreads(2,2,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x + inputData[0] * id.y;
+    if (SingleObjDepthTex[id.xy].x < 0.5 && SingleObjDepthTex[id.xy].x == AllDepthTex[id.xy].x) {
+        outputData[index].ObjArea = 1;
+        if (SingleTarDepthTex[id.xy].x < 0.5 && SingleObjDepthTex[id.xy].x < SingleTarDepthTex[id.xy].x)
+            outputData[index].CoveredArea = 1;
+        else
+            outputData[index].CoveredArea = 0;
+    }
+    else {
+        outputData[index].ObjArea = 0;
+        outputData[index].CoveredArea = 0;
+    }
+
+    if (SingleTarDepthTex[id.xy].x < 0.5 && SingleTarDepthTex[id.xy].x == AllDepthTex[id.xy].x)
+        outputData[index].TarArea = 1;
+    else
+        outputData[index].TarArea = 0;
+}

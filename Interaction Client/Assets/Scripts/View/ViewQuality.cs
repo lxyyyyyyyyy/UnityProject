@@ -37,14 +37,16 @@ public class ViewQuality : MonoBehaviour
     void ViewScore()
     {
         Alpha = 0.9; Beta = 0.1;
-        S = areaScript.GetArea() / 1000.0f; D = CalculD(); Oc = areaScript.GetCoveredArea() / 1000.0f; Or = CalculOr();
-        S_over = completeAreaScript.GetOverArea() / 1000.0f;
-        double part1 = Alpha * (S / (S_over + 0.1));
-        double part2 = 1 / (Math.Log((Oc + 1.1), 10) + 1);
+        S = areaScript.GetArea() / 5000.0f; D = CalculD(); Oc = areaScript.GetCoveredArea() / 5000.0f; Or = CalculOr();
+        S_over = completeAreaScript.GetOverArea() / 5000.0f;
+        // double part1 = Alpha * (Math.Atan(S - 2 * Math.PI) + Math.PI / 2) / (S_over + 1);
+        double part1 = Alpha * S / (S_over + 1);
+        double part2 = 1 / (Math.Log((Oc / S_over + 1.1), 10) + 1);
 
         //double part1 = Alpha * Math.Pow(S + 1, 2) / Math.Sqrt(Math.Pow(Or + 1, 2) + 1);
         //double part2 = 1 / Math.Pow(0.6 * Oc + 1, 2);
         double part3 = Beta * Or / Math.Sqrt(Math.Pow(D, 2) + 1);
+        // Debug.LogFormat("part1:{0}, part2:{1}, part3:{2}", part1, part2, part3);
         score = (float)(part1 * part2 + part3);
 
         SendInfo();

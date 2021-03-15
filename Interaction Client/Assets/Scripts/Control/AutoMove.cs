@@ -10,6 +10,11 @@ public class AutoMove : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
+    {  
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         if (change)
         {
@@ -17,12 +22,6 @@ public class AutoMove : MonoBehaviour
             transform.rotation = rotation;
             change = false;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void SetPosition(Vector3 _position)

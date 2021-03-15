@@ -113,6 +113,7 @@ public class NetWorkAsClient : MonoBehaviour
         }
         if (CameraInfPattern.IsMatch(msg))
         {
+            Debug.Log(msg);
             DealCameraInfo(CameraInfPattern.Match(msg).Groups[1].Value);
         }
         if (OpCameraInfPattern.IsMatch(msg))
