@@ -5,7 +5,7 @@ using UnityEngine;
 public class CalculateCompleteArea : MonoBehaviour
 {
     public ComputeShader shader;
-    private int kernelHandle, overArea = 0;
+    private int kernelHandle, overTarArea, overObjArea;
     private int[] initData;
     private Data[] outputData;
     private ComputeBuffer outputbuffer;
@@ -14,7 +14,8 @@ public class CalculateCompleteArea : MonoBehaviour
 
     struct Data
     {
-        public int Area;
+        public int TarArea;
+        public int ObjArea;
         public int CoveredArea;
     }
 
@@ -28,7 +29,7 @@ public class CalculateCompleteArea : MonoBehaviour
         inputbuffer = new ComputeBuffer(initData.Length, 4);
 
         outputData = new Data[Screen.width * Screen.height];
-        outputbuffer = new ComputeBuffer(outputData.Length, 2 * 4);
+        outputbuffer = new ComputeBuffer(outputData.Length, 3 * 4);
     }
 
     void Update()
@@ -45,18 +46,20 @@ public class CalculateCompleteArea : MonoBehaviour
         shader.SetBuffer(kernelHandle, "outputData", outputbuffer);
         outputbuffer.GetData(outputData);
 
-        overArea = 0;
+        overTarArea = 0; overObjArea = 0;
         for (int i = 0; i < outputData.Length; i++)
         {
-            overArea += outputData[i].Area;
-            overArea += outputData[i].CoveredArea;
+            overTarArea += outputData[i].TarArea;
+            overTarArea += outputData[i].CoveredArea;
+            overObjArea += outputData[i].ObjArea;
         }
-        overArea *= 3;
-        // Debug.LogFormat("over area: {0}", overArea);
+        overObjArea *= 3;
+        overTarArea *= 3;
+
+        Debug.LogFormat("over tar area: {0}, over obj area: {1}, ", overTarArea, overObjArea);
 
         // 要创建的线程组的数量
         shader.Dispatch(kernelHandle, Screen.width / 2, Screen.height / 2, 1);
-
     }
 
     void OnDisabled()
@@ -65,8 +68,13 @@ public class CalculateCompleteArea : MonoBehaviour
         inputbuffer.Dispose();
     }
 
-    public int GetOverArea()
+    public int GetTarOverArea()
     {
-        return overArea;
+        return overTarArea;
+    }
+
+    public int GetObjOverArea()
+    {
+        return overObjArea;
     }
 }

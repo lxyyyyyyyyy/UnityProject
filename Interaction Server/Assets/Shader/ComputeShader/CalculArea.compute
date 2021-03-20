@@ -8,7 +8,8 @@ RWStructuredBuffer<int> inputData;
 
 // outputData
 struct Data {
-    int Area;
+    int TarArea;
+    int ObjArea;
     int CoveredArea;
 };
 
@@ -18,11 +19,20 @@ RWStructuredBuffer<Data> outputData;
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     int index = id.x + inputData[0] * id.y;
-    if ((TargetTex[id.xy].x != 0.0f || TargetTex[id.xy].y != 0.0f || TargetTex[id.xy].z != 0.0f) && (ObjectTex[id.xy].x == 0.0f && ObjectTex[id.xy].y == 0.0f && ObjectTex[id.xy].z == 0.0f))
-        outputData[index].Area = 1;
-    else
-        outputData[index].Area = 0;
 
+    // Obj Area
+    if (ObjectTex[id.xy].x != 0.0f || ObjectTex[id.xy].y != 0.0f || ObjectTex[id.xy].z != 0.0f) 
+        outputData[index].ObjArea = 1;
+    else
+        outputData[index].ObjArea = 0;
+
+    // Tar Area
+    if ((TargetTex[id.xy].x != 0.0f || TargetTex[id.xy].y != 0.0f || TargetTex[id.xy].z != 0.0f) && (ObjectTex[id.xy].x == 0.0f && ObjectTex[id.xy].y == 0.0f && ObjectTex[id.xy].z == 0.0f))
+        outputData[index].TarArea = 1;
+    else
+        outputData[index].TarArea = 0;
+
+    // Covered Area
     if ((TargetTex[id.xy].x != 0.0f || TargetTex[id.xy].y != 0.0f || TargetTex[id.xy].z != 0.0f) && (ObjectTex[id.xy].x != 0.0f || ObjectTex[id.xy].y != 0.0f || ObjectTex[id.xy].z != 0.0f))
         outputData[index].CoveredArea = 1;
     else

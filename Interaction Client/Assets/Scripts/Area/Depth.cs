@@ -17,7 +17,7 @@ public class Depth : MonoBehaviour
         // 这样我们就可以在shader中访问_CameraDepthTexture来获取保存的场景的深度信息
         // float depth = UNITY_SAMPLE_DEPTH(tex2D(_CameraDepthTexture, uv)); 获取某个像素的深度值
         m_Camera.depthTextureMode = DepthTextureMode.Depth;
-        depthTexture = new RenderTexture(Screen.width, Screen.height, 32);
+        depthTexture = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGBFloat);
         depthTexture.enableRandomWrite = true;
     }
 

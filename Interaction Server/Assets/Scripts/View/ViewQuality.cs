@@ -5,12 +5,13 @@ using System;
 
 public class ViewQuality : MonoBehaviour
 {
-    public float S, Oc, opS, opOc, S_over, opS_over;
+    public float S, Oc, S_over, S_obj, S_obj_over;
+    public float opS, opOc, opS_over;
     public double Alpha, Beta, D, Or, opD, opOr;
     public float score, opScore;
     private GameObject viewPoint, stdTarget, movingTarget;
     private NetWorkAsServer serverScript;
-    private CalculateArea areaScript;
+    private CalculAreaUsingDepth areaScript;
     private CalculateCompleteArea completeAreaScript;
     public Material frameMaterial, opFrameMaterial;
 
@@ -21,7 +22,8 @@ public class ViewQuality : MonoBehaviour
         stdTarget = GameObject.Find("StandardObject");
         movingTarget = GameObject.Find("Relief/target");
         serverScript = GameObject.Find("Relief").GetComponent<NetWorkAsServer>();
-        areaScript = GameObject.Find("GameObject").GetComponent<CalculateArea>();
+        // areaScript = GameObject.Find("GameObject").GetComponent<CalculateArea>();
+        areaScript = GameObject.Find("GameObject").GetComponent<CalculAreaUsingDepth>();
         completeAreaScript = GameObject.Find("GameObject").GetComponent<CalculateCompleteArea>();
     }
 
@@ -36,18 +38,19 @@ public class ViewQuality : MonoBehaviour
 
     void ViewScore()
     {
-        Alpha = 0.9; Beta = 0.1;
-        S = areaScript.GetArea() / 5000.0f; D = CalculD(); Oc = areaScript.GetCoveredArea() / 5000.0f; Or = CalculOr();
-        S_over = completeAreaScript.GetOverArea() / 5000.0f;
-        // double part1 = Alpha * (Math.Atan(S - 2 * Math.PI) + Math.PI / 2) / (S_over + 1);
-        double part1 = Alpha * S / (S_over + 1);
-        double part2 = 1 / (Math.Log((Oc / (S_over + 0.01) + 1.1), 10) + 1);
+        Alpha = 0.55; Beta = 0.35; D = CalculD(); Or = CalculOr();
+        S = areaScript.GetTarArea() / 5000.0f; S_obj = areaScript.GetObjArea() / 5000.0f; Oc = areaScript.GetCoveredArea() / 5000.0f;
+        S_over = completeAreaScript.GetTarOverArea() / 5000.0f; S_obj_over = completeAreaScript.GetObjOverArea() / 5000.0f;
 
-        //double part1 = Alpha * Math.Pow(S + 1, 2) / Math.Sqrt(Math.Pow(Or + 1, 2) + 1);
-        //double part2 = 1 / Math.Pow(0.6 * Oc + 1, 2);
+        // double part1 = Alpha * (Math.Atan(S - 2 * Math.PI) + Math.PI / 2) / (S_over + 1);
+        S_over += 0.1f; S_obj_over += 0.1f;
+        double part1 = Alpha * S / S_over;
+        double part2 = 1 / (Math.Log((Oc / S_over + 1.1), 10) + 1);
         double part3 = Beta * Or / Math.Sqrt(Math.Pow(D, 2) + 1);
-        // Debug.LogFormat("part1:{0}, part2:{1}, part3:{2}", part1, part2, part3);
-        score = (float)(part1 * part2 + part3);
+        double part4 = (1 - Alpha - Beta) * (S_obj / S_obj_over);
+
+        Debug.LogFormat("part1:{0}, part2:{1}, part3:{2}, part4:{3}", part1, part2, part3, part4);
+        score = (float)(part1 * part2 + part3 + part4);
 
         SendInfo();
 

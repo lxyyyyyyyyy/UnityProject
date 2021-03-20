@@ -22,7 +22,6 @@ public class NetWorkAsServer : MonoBehaviour
     private OppositeRay oppositeRayScript;
     private ClientCamera clientCameraScript;
     private ViewQuality viewQualityScript;
-    private ButtonControl butControlScript;
 
     void Awake()
     {
@@ -37,14 +36,13 @@ public class NetWorkAsServer : MonoBehaviour
         oppositeRayScript = GameObject.Find("Relief/Line2").GetComponent<OppositeRay>();
         clientCameraScript = GameObject.Find("ClientCamera").GetComponent<ClientCamera>();
         viewQualityScript = GameObject.Find("Main Camera").GetComponent<ViewQuality>();
-        butControlScript = GameObject.Find("Canvas/Button1").GetComponent<ButtonControl>();
     }
 
     void Start()
     {
         Debug.Log("服务器端已启动!");
         serverSocket.Bind(new IPEndPoint(IPAddress.Parse(IP), port));
-        serverSocket.Listen(10); // 设定最多100个排队连接请求   
+        serverSocket.Listen(10); // 设定最多10个排队连接请求   
         Thread myThread = new Thread(ListenClientConnect); // 通过多线程监听客户端连接  
         myThread.Start();
     }

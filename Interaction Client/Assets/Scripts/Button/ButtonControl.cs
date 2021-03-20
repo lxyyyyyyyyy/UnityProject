@@ -9,10 +9,12 @@ public class ButtonControl : MonoBehaviour
     public UnityEvent event1;
     private Button btn;
 
+    private float serverScore, clientScore;
+
     void Awake()
     {
         btn = GetComponent<Button>();
-        event1.AddListener(ChangeDominator);
+        event1.AddListener(GameObject.Find("DomChange").GetComponent<ChangeDominatorScript>().ChangeDominator);
     }
 
     // Start is called before the first frame update
@@ -27,18 +29,6 @@ public class ButtonControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
 
-    void ChangeDominator()
-    {
-        if (GameObject.Find("Relief").GetComponent<Move>().dominator)
-        {
-            Debug.Log("You are already the Dominator");
-            return;
-        }
-        GameObject.Find("Relief").GetComponent<Move>().dominator = true;
-        GameObject.Find("Relief").GetComponent<NetWorkAsClient>().SendMessageToServer("Dominator");
-        // GameObject.Find("ClientCamera").SetActive(false);
-    }
 }
