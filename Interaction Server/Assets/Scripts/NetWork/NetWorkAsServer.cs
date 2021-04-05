@@ -16,6 +16,8 @@ public class NetWorkAsServer : MonoBehaviour
     private Socket serverSocket;
     private List<Socket> clientList;
 
+    private Queue<string> msg_queue;
+
     private Move targetMoveScript;
     private MyRay myRayScript;
     private MyCamera myCameraScript;
@@ -26,12 +28,14 @@ public class NetWorkAsServer : MonoBehaviour
     void Awake()
     {
         IP = "127.0.0.1";
-        port = 10001;
+        port = 10002;
         serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         clientList = new List<Socket>();
 
+        msg_queue = new Queue<string>();
+
         targetMoveScript = GameObject.Find("Relief").GetComponent<Move>();
-        myRayScript = GameObject.Find("Main Camera").GetComponent<MyRay>();
+        myRayScript = GameObject.Find("Relief/Line1").GetComponent<MyRay>();
         myCameraScript = GameObject.Find("Main Camera").GetComponent<MyCamera>();
         oppositeRayScript = GameObject.Find("Relief/Line2").GetComponent<OppositeRay>();
         clientCameraScript = GameObject.Find("ClientCamera").GetComponent<ClientCamera>();
@@ -45,6 +49,15 @@ public class NetWorkAsServer : MonoBehaviour
         serverSocket.Listen(10); // 设定最多10个排队连接请求   
         Thread myThread = new Thread(ListenClientConnect); // 通过多线程监听客户端连接  
         myThread.Start();
+    }
+
+    void Update()
+    {
+        while (msg_queue.Count > 0)
+        {
+            string msg = msg_queue.Dequeue();
+            ParseMsg(msg);
+        }
     }
 
     void OnDestroy()
@@ -67,7 +80,6 @@ public class NetWorkAsServer : MonoBehaviour
             receiveThread.Start(clientSocket);
             // 另一用户已连接，设置另一用户射线状态及颜色
             oppositeRayScript.SetState(true);
-            oppositeRayScript.SetColor(Color.red);
         }
     }
 
@@ -88,7 +100,12 @@ public class NetWorkAsServer : MonoBehaviour
                 }
                 string recvStr = Encoding.UTF8.GetString(buffer, 0, receiveBytes);
                 // Debug.LogFormat ("接收客户端 {0} 的消息：{1}", myClientSocket.RemoteEndPoint.ToString(), recvStr);
-                ParseMsg(recvStr);
+                string[] singleStr = recvStr.Split('#');
+                foreach (string s in singleStr)
+                {
+                    if (s.Length == 0) continue;
+                    msg_queue.Enqueue(s);
+                }
             }
             catch (Exception ex)
             {
@@ -112,13 +129,13 @@ public class NetWorkAsServer : MonoBehaviour
 
     void ParseMsg(string msg)
     {
-        Regex DominatorPattern = new Regex(@"#Dominator"); 
-        Regex OppositeDetectPattern = new Regex(@"#Ready");
-        Regex TargetInfoPattern = new Regex(@"#Target(.+)");
-        Regex RayInfPattern = new Regex(@"#Ray(.+)");
-        Regex CameraInfPattern = new Regex(@"#Camera(.+)");
-        Regex ViewScorePattern = new Regex(@"#ViewScore(.+)");
-        Regex ViewFactorPattern = new Regex(@"#Area(.+),OverArea(.+),Dis(.+),Oc(.+),Or(.+)");
+        Regex DominatorPattern = new Regex(@"Dominator"); 
+        Regex OppositeDetectPattern = new Regex(@"Ready");
+        Regex TargetInfoPattern = new Regex(@"Target(.+)");
+        Regex RayInfPattern = new Regex(@"Ray(.+)");
+        Regex CameraInfPattern = new Regex(@"Camera(.+)");
+        Regex ViewScorePattern = new Regex(@"ViewScore(.+)");
+        Regex ViewFactorPattern = new Regex(@"Area(.+),OverArea(.+),Dis(.+),Oc(.+),Or(.+)");
 
         if (DominatorPattern.IsMatch(msg))
         {
@@ -152,19 +169,9 @@ public class NetWorkAsServer : MonoBehaviour
         }
     }
 
-    void DealChangeDominator() {
-        targetMoveScript.dominator = false;
-    } 
+    void DealChangeDominator() => targetMoveScript.dominator = false;
 
-    void DealOppositeDetectTarget()
-    {
-        myRayScript.oppositeDetected = true;
-        // 设置另一用户射线颜色
-        if (myRayScript.detected)
-            oppositeRayScript.SetColor(Color.green);
-        else
-            oppositeRayScript.SetColor(Color.blue);
-    }
+    void DealOppositeDetectTarget() => oppositeRayScript.detected = true;
 
     void DealTargetInfo(string msg)
     {

@@ -43,8 +43,8 @@ public class Move : MonoBehaviour
         }
 
         if (!dominator) return;
-        if (!GameObject.Find("Main Camera").GetComponent<MyRay>().detected) return;
-        if (!GameObject.Find("Main Camera").GetComponent<MyRay>().oppositeDetected) return;
+        if (!GameObject.Find("Relief/Line1").GetComponent<MyRay>().detected) return;
+        if (!GameObject.Find("Relief/Line2").GetComponent<OppositeRay>().detected) return;
 
         // 平移
         for (int i = 0; i < inputKeys.Length; i++)

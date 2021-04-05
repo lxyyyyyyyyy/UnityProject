@@ -15,6 +15,8 @@ public class NetWorkAsClient : MonoBehaviour
     private int serverPort;
     private Socket clientSocket;
 
+    private Queue<string> msg_queue;
+
     private Move targetMoveScript;
     private MyRay myRayScript;
     private OppositeRay oppositeRayScript;
@@ -25,8 +27,11 @@ public class NetWorkAsClient : MonoBehaviour
     void Awake()
     {
         serverIP = "127.0.0.1";
-        serverPort = 10001;
+        serverPort = 10002;
         clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        msg_queue = new Queue<string>();
+
         targetMoveScript = GameObject.Find("Relief").GetComponent<Move>();
         myRayScript = GameObject.Find("Main Camera").GetComponent<MyRay>();
         oppositeRayScript = GameObject.Find("Relief/Line2").GetComponent<OppositeRay>();
@@ -52,6 +57,15 @@ public class NetWorkAsClient : MonoBehaviour
             return;
         }
         SendMessageToServer("hello");
+    }
+
+    void Update()
+    {
+        while (msg_queue.Count > 0)
+        {
+            string msg = msg_queue.Dequeue();
+            ParseMsg(msg);
+        }
     }
 
     void OnDestroy()
@@ -80,20 +94,25 @@ public class NetWorkAsClient : MonoBehaviour
             }
             string recvStr = Encoding.UTF8.GetString(buffer, 0, receiveBytes);
             // Debug.LogFormat("接收服务器的消息：{0}", recvStr);
-            ParseMsg(recvStr);
+            string[] singleStr = recvStr.Split('#');
+            foreach(string s in singleStr)
+            {
+                if (s.Length == 0) continue;
+                msg_queue.Enqueue(s);
+            }
         } 
     }
 
     void ParseMsg(string msg)
     {
-        Regex DominatorPattern = new Regex(@"#Dominator");
-        Regex OppositeDetectPattern = new Regex(@"#Ready");
-        Regex TargetInfoPattern = new Regex(@"#Target(.+)");
-        Regex RayInfPattern = new Regex(@"#Ray(.+)");
-        Regex CameraInfPattern = new Regex(@"#OpCamera(.+)");
-        Regex OpCameraInfPattern = new Regex(@"#Camera(.+)");
-        Regex ViewScorePattern = new Regex(@"#ViewScore(.+)");
-        Regex ViewFactorPattern = new Regex(@"#Area(.+),OverArea(.+),Dis(.+),Oc(.+),Or(.+)");
+        Regex DominatorPattern = new Regex(@"Dominator");
+        Regex OppositeDetectPattern = new Regex(@"Ready");
+        Regex TargetInfoPattern = new Regex(@"Target(.+)");
+        Regex RayInfPattern = new Regex(@"Ray(.+)");
+        Regex CameraInfPattern = new Regex(@"OpCamera(.+)");
+        Regex OpCameraInfPattern = new Regex(@"Camera(.+)");
+        Regex ViewScorePattern = new Regex(@"ViewScore(.+)");
+        Regex ViewFactorPattern = new Regex(@"Area(.+),OverArea(.+),Dis(.+),Oc(.+),Or(.+)");
 
         if (DominatorPattern.IsMatch(msg))
         {
